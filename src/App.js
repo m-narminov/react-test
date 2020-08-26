@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import { useList } from 'effector-react'
+
+import {
+  $tasksList,
+  loadTasksFx,
+  createTaskFx,
+  updateTaskFx,
+  deleteTaskFx,
+} from './store'
+import Task from './components/Task'
+import Button from './components/Button'
+import './App.css'
 
 function App() {
+  const tasksList = useList($tasksList, task => <Task task={task} />)
+  useEffect(() => {
+    async function fetchTasks() {
+      await loadTasksFx()
+    }
+    fetchTasks()
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <p>
+        Список задач <Button type={'outlined'} value={'Добавить'} />
+      </p>
+      <ul>{tasksList}</ul>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
